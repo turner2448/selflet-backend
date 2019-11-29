@@ -4,9 +4,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
-public class Loginontroller {
+public class LoginController {
 
-    @RequestMapping("/")
+    @RequestMapping("/login")
     public String index() {
         return "Greetings from Spring Boot!";
     }
