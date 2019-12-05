@@ -12,15 +12,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
 //import java.util.Map;
-import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -71,8 +70,6 @@ public class UserController {
 		httpHeaders.set("Content-Type", "application/json");
 		HttpEntity<String> entity = new HttpEntity<String>(requestJSON.toString(),httpHeaders);	
 		
-		System.out.println(entity);
-		
 		try {
 			String answer = restTemplate.postForObject(uri, entity, String.class);
 		//System.out.println(answer);
@@ -118,6 +115,74 @@ public class UserController {
 		}
 		return null;
 		
+	}
+	
+	@CrossOrigin(origins = "http://localhost:3000")
+	@DeleteMapping(value="/users", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> deleteUser(@RequestBody CreateUser createUser) {
+		String uri = "http://localhost:8080/auth/admin/realms/selflet/users/" + createUser.getId();
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("Authorization", "Bearer " + createUser.getToken());		
+		httpHeaders.set("Content-Type", "application/json");
+		HttpEntity<String> entity = new HttpEntity<String>(httpHeaders);
+		
+		RestTemplate restTemplate = new RestTemplate();
+		
+		try {
+			ResponseEntity<String> result = restTemplate.exchange(uri, HttpMethod.DELETE, entity, String.class);
+			System.out.println(result.getBody());
+			return result;
+		} catch(Exception ex) {
+			return null;
+		}		
+	}
+	
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PutMapping(value="/users", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> editUser(@RequestBody CreateUser createUser) {
+		String uri = "http://localhost:8080/auth/admin/realms/selflet/users/" + createUser.getId();
+		
+		String token = createUser.getToken();
+		String username = createUser.getUsername();
+		String firstName = createUser.getFirstName();
+		String lastName = createUser.getLastName();
+		String agency = createUser.getAgency();
+		String landlord = createUser.getLandlord();
+		String tenant = createUser.getTenant();
+		String agencyId = createUser.getAgencyId();
+		String email = createUser.getEmail();
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("Authorization", "Bearer " + token);		
+		httpHeaders.set("Content-Type", "application/json");
+		
+		RestTemplate restTemplate = new RestTemplate();
+		
+		//add custom attributes
+		Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("agency", agency);
+		attributes.put("landlord", landlord);
+		attributes.put("tenant", tenant);
+		attributes.put("agencyId", agencyId);
+		
+		JSONObject requestJSON = new JSONObject();
+		//requestJSON.put("token", token);
+		requestJSON.put("username", username);
+		requestJSON.put("email", email);
+		requestJSON.put("firstName", firstName);
+		requestJSON.put("lastName", lastName);
+		requestJSON.put("enabled", true);
+		requestJSON.put("attributes", attributes);
+		
+		HttpEntity<String> entity = new HttpEntity<String>(requestJSON.toString(),httpHeaders);	
+		
+		try {
+			ResponseEntity<String> result = restTemplate.exchange(uri, HttpMethod.PUT, entity, String.class);
+			return result;
+		} catch(Exception ex) {
+			return null;
+		}		
 	}
 
 }

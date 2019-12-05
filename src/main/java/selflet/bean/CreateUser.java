@@ -2,6 +2,7 @@ package selflet.bean;
 
 public class CreateUser {
 	String token; //the bearer token of the creating user
+	String id;
 	String username;
 	String email;
 	String firstName;
@@ -16,6 +17,13 @@ public class CreateUser {
 	}
 	public void setToken(String token) {
 		this.token = token;
+	}
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 	public String getUsername() {
 		return username;
