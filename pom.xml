@@ -6,12 +6,12 @@
 		<connection>scm:git:git@github.com:turner2448/selflet-backend.git</connection>
 		<developerConnection>scm:git:git@github.com:turner2448/selflet-backend.git</developerConnection>
 		<url>scm:git:git@github.com:turner2448/selflet-backend.git</url>
-	  <tag>HEAD</tag>
+	  <tag>selflet-backend-0.0.1</tag>
   </scm>
 
 	<groupId>org.springframework</groupId>
 	<artifactId>selflet-backend</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 
 	<properties>
 		<keycloak.version>7.0.0</keycloak.version>
